@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Voice</title>
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/css/bootstrap.min.css">
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	
+	<style type="text/css">
+		body {
+	    background: #d1d5db
+	}
+
+	.height {
+	    height: 100vh
+	}
+
+	.form {
+	    position: relative
+	}
+
+	.form .fa-search {
+	    position: absolute;
+	    top: 20px;
+	    left: 20px;
+	    color: #9ca3af
+	}
+
+	.form span {
+	    position: absolute;
+	    right: 17px;
+	    top: 13px;
+	    padding: 2px;
+	    border-left: 1px solid #d1d5db
+	}
+
+	.left-pan {
+	    padding-left: 7px
+	}
+
+	.left-pan i {
+	    padding-left: 10px
+	}
+
+	.form-input {
+	    height: 55px;
+	    text-indent: 33px;
+	    border-radius: 10px
+	}
+
+	.form-input:focus {
+	    box-shadow: none;
+	    border: none
+	}
+	</style>
+
+</head>
+<body>
+<div class="container">
+    <div class="row height d-flex justify-content-center align-items-center">
+        <div class="col-md-6">
+            <div class="form"> <i class="fa fa-search"></i> <input type="text" id="result" class="form-control form-input" placeholder="Search anything..."> <span onclick="startConverting();" class="left-pan"><i class="fa fa-microphone"></i></span> </div>
+        </div>
+        <div class="col-md-3"><span id="result1"></span></div>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+	function startConverting() {
+		var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+		var recognition = new SpeechRecognition();
+		recognition.continuous = true;
+		recognition.start();
+		recognition.onresult = function(event) {
+			var transcript = event.results[0][0].transcript;
+			document.getElementById('result').value = transcript;
+			$.ajax({
+				type :'POST',
+				url : '/result',
+				data : {'transcript': transcript},
+				success : function(data){
+					document.getElementById('result1').innerHTML = data.result
+				}
+			})
+		}
+
+	}
+</script>
+</html>
